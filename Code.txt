@@ -1,0 +1,93 @@
+https://studio.code.org/projects/gamelab/L4HSynQl0gCJtPyq-TsRjquylMBJqePXsXE49OQ_iOs
+
+Source code
+ 
+//For bg
+var Back = createSprite(200, 200);
+Back .setAnimation("Back");
+Back .scale = .99;
+var Over = createSprite(200, 200);
+Over.setAnimation("Over");
+Over.scale = .99;
+//For shark
+var Shark = createSprite(75, 330);
+Shark .setAnimation("Shark");
+Shark.scale = .5;
+//For coin
+var Coin = createSprite(300, 200);
+Coin.setAnimation("Coin");
+Coin .scale = .25;
+Coin.play();
+Coin .visible = false;
+//For fish
+var Fish  = createSprite(300, 200);
+Fish .setAnimation("Fish");
+Fish .scale = .65;
+Fish .pause();
+var Score = 0;
+function draw() {
+  background("white");
+  drawSprites();
+  //Rep bg
+  if (Back.x < 200) {
+    Back.x = Back.x - 5;
+    Back.x = 200;
+  }
+  Fish.velocityX = -6;
+  if (Fish.x < 0 && Fish.y > 0) {
+    Fish.setFrame(0);
+    Fish.pause();
+    Fish.velocityX = 0;
+    Fish.velocityY = 0;
+    Fish.x = Shark.x + 300;
+    Fish.y = randomNumber(100, 300);
+    Fish.visible = true;
+  }
+  if (keyDown("up")) {
+    Shark.y = Shark.y - 10;
+  }
+  if (keyDown("down")) {
+    Shark.y = Shark.y + 10;
+  }
+  if (keyDown("right")) {
+    Shark.x = Shark.x + 10;
+  }
+  if (keyDown("left")) {
+    Shark.x = Shark.x - 10;
+  }
+  if (Shark.isTouching(Fish)) {
+    Score = Score + 10;
+    playSound("https://audio.code.org/winpoint2.mp3", false);
+    if ((keyDown("up") || keyDown("down")) || (keyDown("right") || keyDown("left"))) {
+      stopSound("https://audio.code.org/winpoint2.mp3");
+    }
+    Fish.play();
+    Fish.velocityX = -7;
+    Fish.velocityY = -10;
+    Coin.visible = true;
+    Coin.velocityY = -5;
+  }
+  if (Fish.y < -8) {
+    Fish.setFrame(0);
+    Fish.pause();
+    Fish.velocityX = 0;
+    Fish.velocityY = 0;
+    Fish.x = Shark.x + 300;
+    Fish.y = randomNumber(100, 300);
+    Fish.visible = true;
+  }
+  if (Coin.y < 0) {
+    Coin.x = Fish.x;
+    Coin.y = Fish.y;
+    Coin.visible = false;
+  }
+  stroke("white");
+  fill("white");
+  textSize(23);
+  text(("Score" + "=") + Score, 140, 65);
+  if (keyDown("space")) {
+    Over.visible = true;
+    Shark.destroy();
+    Fish.destroy();
+  }
+}
